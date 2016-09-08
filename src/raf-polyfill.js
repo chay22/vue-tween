@@ -1,51 +1,52 @@
-const root = typeof window !== 'undefined' ? window : global
+const root = window || {}
 const vendor = ['ms', 'moz', 'webkit', 'o']
-let requestAnimationFrame
-let cancelAnimationFrame
+let raf = root.requestAnimationFrame
+let caf = root.cancelAnimationFrame || root.cancelRequestAnimationFrame
+let perf = root.performance || {}
 let lastTime = 0
-
-if (!('performance' in root)) {
-  root.performance = {}
-}
 
 if (!Date.now) {
   Date.now = () => (new Date()).getTime()
 }
 
-if (!('now' in root.performance)) {
+if (!perf.now) {
   let nowOffset = Date.now()
 
   if (
-    root.performance.timing &&
-    root.performance.timing.navigationStart
+    perf.timing &&
+    !!perf.timing.navigationStart
   ) {
-    nowOffset = root.performance.timing.navigationStart
+    nowOffset = perf.timing.navigationStart
   }
 
-  root.performance.now = () => Date.now() - nowOffset
+  perf.now = () => Date.now() - nowOffset
 }
 
-for (let i = 0; i < vendor.length && !root.requestAnimationFrame; ++i) {
-    root.requestAnimationFrame = root[`${vendor[i]}RequestAnimationFrame`]
-    root.cancelAnimationFrame = root[`${vendor[i]}CancelAnimationFrame`] ||
-        root[`${vendor[i]}CancelRequestAnimationFrame`]
+for (let i = 0; i < vendor.length && !raf; ++i) {
+  raf = root[`${vendor[i]}RequestAnimationFrame`]
+  caf = root[`${vendor[i]}CancelAnimationFrame`] ||
+      root[`${vendor[i]}CancelRequestAnimationFrame`]
 }
 
-if (!root.requestAnimationFrame) {
-  root.requestAnimationFrame = (callback) => {
-      const currTime = Date.now()
-      const timeToCall = Math.max(0, 16 - (currTime - lastTime))
-      const id = setTimeout(function () {
-          callback(currTime + timeToCall)
-      }, timeToCall)
+if (!raf) {
+  raf = (callback) => {
+    const currTime = Date.now()
+    const timeToCall = Math.max(0, 16 - (currTime - lastTime))
+    const id = setTimeout(function () {
+        callback(currTime + timeToCall)
+    }, timeToCall)
 
-      lastTime = currTime + timeToCall
-      return id
+    lastTime = currTime + timeToCall
+    return id
   }
 }
 
-if (!root.cancelAnimationFrame) {
-  root.cancelAnimationFrame = (id) => clearTimeout(id)
+if (!caf) {
+  caf = (id) => clearTimeout(id)
 }
 
-export { root as default }
+export default (function () {
+  root.performance = perf
+  root.requestAnimationFrame = raf
+  root.cancelAnimationFrame = caf
+})()
