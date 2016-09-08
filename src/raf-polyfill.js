@@ -1,8 +1,9 @@
 const root = window || {}
 const vendor = ['ms', 'moz', 'webkit', 'o']
+const perf = root.performance || {}
 let raf = root.requestAnimationFrame
-let caf = root.cancelAnimationFrame || root.cancelRequestAnimationFrame
-let perf = root.performance || {}
+let caf = root.cancelAnimationFrame ||
+    root.cancelRequestAnimationFrame
 let lastTime = 0
 
 if (!Date.now) {
@@ -32,8 +33,8 @@ if (!raf) {
   raf = (callback) => {
     const currTime = Date.now()
     const timeToCall = Math.max(0, 16 - (currTime - lastTime))
-    const id = setTimeout(function () {
-        callback(currTime + timeToCall)
+    const id = setTimeout(() => {
+      callback(currTime + timeToCall)
     }, timeToCall)
 
     lastTime = currTime + timeToCall
