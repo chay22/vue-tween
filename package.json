@@ -1,6 +1,6 @@
 {
   "name": "vue-tween",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Javascript Tweening for Vue",
   "main": "vue-tween.js",
   "jsnext:main": "src/vue-tween.js",
