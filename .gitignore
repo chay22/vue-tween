@@ -3,5 +3,6 @@ node_modules
 npm-debug.log
 build
 dist
+index.html
 *.sublime-project
 *.sublime-workspace
