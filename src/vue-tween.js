@@ -14,14 +14,14 @@ const DEFAULT = {
  * Bind a function with argument appended
  * without context.
  * @param  {Function} fn  Function to bind to.
- * @param  {Mixed}    ctx Context
+ * @param  {Mixed}    arg Argument
  * @return {Function}     Bound function.
  */
 function appendArgs (fn, arg) { 
   return function () {
     return fn.apply(
       null,
-      [].slice.call(arguments).concat(ctx)
+      [].slice.call(arguments).concat(arg)
     )
   }
 }
@@ -73,7 +73,7 @@ function definition (Vue, opts) {
   const isNewVersion = +(Vue.version.slice(0, 1)) >= 2
   let on
 
-  if (isNewVersion) {
+  if (!isNewVersion) {
     on = Vue.directive('on')
   }
 
@@ -82,9 +82,9 @@ function definition (Vue, opts) {
   return {
     isFn: true,
 
-    priority: isNewVersion ? on.priority + 1 : undefined,
+    priority: !isNewVersion ? on.priority + 1 : undefined,
 
-    keyCodes: isNewVersion ? on.keyCodes : undefined,
+    keyCodes: !isNewVersion ? on.keyCodes : undefined,
 
     bind () {
       let el, arg, handler, rawName, modifier, context
@@ -94,11 +94,11 @@ function definition (Vue, opts) {
         arg = arguments[1].arg
         handler = arguments[1].value
         rawName - arguments[1].rawName
-        modifier = arguments[1].modifier
-        context = arguments[2].vn.context
+        modifier = arguments[1].modifiers
+        context = arguments[2].context
       } else {
         arg = this.arg
-        handler = arguments[0]
+        handler = this.vm[this.descriptor.raw]
         rawName = this.descriptor.raw
         context = this.vm
       }
@@ -118,8 +118,8 @@ function definition (Vue, opts) {
       }
 
       if (!isPlainObject(handler)) {
-        const type = Array.isArray(value)
-            ? 'array' : typeof value
+        const type = Array.isArray(handler)
+            ? 'array' : typeof handler
 
         warn(
           `v-${opts.name} expects '${rawName}' to be an ` +
