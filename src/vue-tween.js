@@ -17,7 +17,7 @@ const DEFAULT = {
  * @param  {Mixed}    arg Argument
  * @return {Function}     Bound function.
  */
-function appendArgs (fn, arg) { 
+function appendArgs (fn, arg) {
   return function () {
     return fn.apply(
       null,
@@ -108,7 +108,6 @@ function definition (Vue, opts) {
           `v-${opts.name} missing required event name.`,
           context
         )
-
         return
       }
 
@@ -127,7 +126,6 @@ function definition (Vue, opts) {
           `instead of ${type}.`,
           context
         )
-
         return
       }
 
@@ -137,7 +135,6 @@ function definition (Vue, opts) {
           `function instead of ${type}.`,
           context
         )
-
         return
       }
 
@@ -218,7 +215,7 @@ function definition (Vue, opts) {
 export default {
   name: 'tween',
 
-  version: '0.1.0',
+  version: '1.0.0',
 
   default: DEFAULT,
 
@@ -234,11 +231,10 @@ export default {
     for (const key in this.easing) {
       if (!isFn(this.easing[key])) {
         warn(
-          `[v-${this.name}] Value of easing '${key}' ` +
+          `v-${this.name} Value of easing '${key}' ` +
           `must be a function instead of ` +
           typeof this.easing[key]
         )
-
         this.easing[key] = undefined
       }
     }

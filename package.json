@@ -4,9 +4,11 @@
   "description": "Javascript Tweening for Vue",
   "main": "vue-tween.js",
   "jsnext:main": "src/vue-tween.js",
+  "browser": "vue-tween.min.js",
   "scripts": {
-    "lint": "eslint src dist",
-    "build": "rollup -c build/bundle.js",
+    "lint": "eslint src dist/vue-tween.js",
+    "build": "rollup -c build/build.js",
+    "build:bundle": "rollup -c build/polyfill.js && rollup -c build/bundle.js",
     "prod": "rollup -c build/prod.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,7 +17,10 @@
     "url": "https://github.com/chay22/vue-tween.git"
   },
   "keywords": [
-    "Vue", "Tween", "requestAnimationFrame", "animate"
+    "Vue",
+    "Tween",
+    "requestAnimationFrame",
+    "animate"
   ],
   "author": "Cahyadi Nugraha",
   "license": "MIT",
@@ -27,12 +32,10 @@
     "eslint": "^3.4.0",
     "eslint-config-vue": "^1.1.0",
     "eslint-plugin-vue": "^0.1.1",
-    "raf": "^3.3.0",
     "rollup": "^0.34.13",
     "rollup-plugin-buble": "^0.13.0",
-    "rollup-plugin-commonjs": "^4.1.0",
     "rollup-plugin-includepaths": "^0.1.5",
-    "rollup-plugin-node-resolve": "^2.0.0",
+    "rollup-plugin-multi-entry": "^2.0.1",
     "rollup-plugin-uglify": "^1.0.1"
   }
 }
